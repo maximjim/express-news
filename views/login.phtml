@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo $title ?></title>
+    <link rel="stylesheet" href="../workpiece/style/bootstrap.min.css">
+    <link rel="stylesheet" href="../workpiece/style/bootstrap.css">
+    <link rel="stylesheet" href="../workpiece/style/bootstrap-theme.css">
+    <link rel="stylesheet" href="../workpiece/style/bootstrap-theme.min.css">
+</head>
+<body>
+
+
+
+<!-- текст подсказка -->
+<div  class="text-center">
+    <?php if(isset($_SESSION['user'])){ ?>
+        <h3> Добро пожаловать, <?php echo $_SESSION['user']['login'] ?>.</h3>
+        <h3> Теперь вам доступно больше ресурсов нашего сайта. <a href="/">ГЛАВНАЯ СТРАНИЦА</a> </h3>
+   <?php } else {?>
+    <h3> Добро пожаловать, гость.</h3>
+    <h4>Для входа на сайт заполните форму и нажмите войти :)</h4>
+    <?php }?>
+</div>
+
+<!-- Информация о авторизация -->
+<?php if(isset($result)){ ?>
+<div class="text-center">
+    <h4><?php echo $result ?></h4>
+</div>
+<?php } ?>
+
+<!-- form for login -->
+<?php if(!isset($_SESSION['user'])){ ?>
+<form method="post" class="form-horizontal" action="">
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Логин:</label>
+        <div class="col-sm-5">
+            <input name="userLogin" type="text" class="form-control" placeholder="Логин">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label  class="col-sm-2 control-label">Пароль</label>
+        <div class="col-sm-5">
+            <input name="userPassword" type="password" class="form-control" placeholder="Пароль">
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </div>
+    </div>
+</form>
+<?php }?>
+
+</body>
+</html>

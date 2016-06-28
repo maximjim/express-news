@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<?php if (isset($accessDenied)) { ?>
+    <div class="text-center">
+        <h4><?php echo $accessDenied?></h4>
+    </div>
+<?php die(); } ?>
+
+<div class="text-right ">
+   <h2> <a href="/admin/region/add" class="btn-success">Добавить регион</a></h2>
+</div>
+
+<?php if (is_array($regions)) { ?>
+
+    <table class="table table-striped">
+        <tr>
+            <th>id</th>
+            <th>Название региона</th>
+            <th>Удалить регион</th>
+            <th>Редактировать регион</th>
+        </tr>
+        <?php foreach ($regions as $region) { ?>
+            <tr>
+                <td><?php echo $region['id'] ?></td>
+                <td><?php echo $region['name'] ?></td>
+                <td><p><a href="/admin/deleteRegion/region=<?php echo $region['id'] ?>" class="btn btn-primary" role="button">Удалить</a></td>
+                <td><p><a href="/admin/editRegion/region=<?php echo $region['id'] ?>" class="btn btn-primary" role="button">Редактировать</a></td>
+            </tr>
+        <?php } ?>
+    </table>
+
+    <div class="text-center">
+        <nav>
+            <ul class="pagination">
+
+                <?php if ($pages['first'] != null) { ?>
+                    <li><a href="/post/page=<?php echo $pages['first'] ?>">Первая</a></li>
+                <?php } ?>
+
+                <?php if ($pages['pre'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['pre'] ?>"><?php echo $pages['pre'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['cur'] != null) { ?>
+                    <li><a class="active btn-primary"
+                           href="<?php echo $link . $pages['cur'] ?>"><?php echo $pages['cur'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['next'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['next'] ?>"><?php echo $pages['next'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['last'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['last'] ?>">Последняя</a></li>
+                <?php } ?>
+            </ul>
+        </nav>
+    </div>
+<?php } else { ?>
+    <div class="text-center">
+        <h4>Регионов не найдено</h4>
+    </div>
+<?php } ?>
+
+</body>
+</html>

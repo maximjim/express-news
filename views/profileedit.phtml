@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<?php if (!empty($_POST)) {
+    if (!empty($errors)){
+        foreach ($errors as $error) {
+            ?>
+            <div class="text-center">
+                <h4><?php echo $error ?></h4>
+            </div>
+        <?php }
+    } if(isset($result)){ ?>
+        <div class="text-center">
+            <h4><?php echo $result ?></h4>
+        </div>
+    <?php } } else { ?>
+    <div class="text-center">
+        <h4>Заполните все поля, все поля обязательны для заполнения!</h4>
+    </div>
+<?php } ?>
+
+
+<?php if (isset($_SESSION['user'])) { ?>
+    <form method="POST" class="form-horizontal" action="/profile/edit">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Почта:</label>
+            <div class="col-sm-5">
+                <input name="mail" type="email" class="form-control" placeholder="Email" value="<?php echo $_SESSION['user']['email'] ?>">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Имя:</label>
+            <div class="col-sm-5">
+                <input name="userName" type="text" class="form-control" placeholder="Имя" value="<?php echo $_SESSION['user']['name'] ?>">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Фамилия:</label>
+            <div class="col-sm-5">
+                <input name="userSurname" type="text" class="form-control" placeholder="Фамилия" value="<?php echo $_SESSION['user']['surname'] ?>">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Логин:</label>
+            <div class="col-sm-5">
+                <input name="userLogin" type="text" class="form-control" placeholder="Логин" value="<?php echo $_SESSION['user']['login'] ?>">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Пароль</label>
+            <div class="col-sm-5">
+                <input name="userPassword1" type="password" class="form-control" placeholder="Пароль">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Повторите пароль</label>
+            <div class="col-sm-5">
+                <input name="userPassword2" type="password" class="form-control" placeholder="Повтор пароля">
+            </div>
+        </div>
+
+        <div class="form-group invisible">
+            <label class="col-sm-2 control-label">id</label>
+            <div class="col-sm-5">
+                <input name="id" type="text" class="form-control" placeholder="id" value="<?php echo $_SESSION['user']['id'] ?>">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">Обновить профиль</button>
+            </div>
+        </div>
+    </form>
+<?php } else { ?>
+    <div class="text-center">
+        <h4>Вы не авторизованы чтобы смотреть и редактировать данные</h4>
+    </div>
+<?php } ?>
+</body>
+</html>

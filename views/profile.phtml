@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<?php if (isset($_SESSION['user'])) { ?>
+    <div class="text-center col-md-6">
+
+        <a class="btn-primary btn-block btn-toolbar" href="/profile/edit">Редактировать профиль</a>
+        <table class="table">
+            <tr>
+                <td>Логин</td> <td><?php echo $_SESSION['user']['login']?></td>
+            </tr>
+            <tr>
+                <td>Имя</td> <td><?php echo $_SESSION['user']['name']?></td>
+            </tr>
+            <tr>
+                <td>Фамилия</td> <td><?php echo $_SESSION['user']['surname']?></td>
+            </tr>
+            <tr>
+                <td>Почта</td> <td><?php echo $_SESSION['user']['email']?></td>
+            </tr>
+            <tr>
+                <td>Пароль</td> <td><?php echo $_SESSION['user']['password']?></td>
+            </tr>
+        </table>
+    </div>
+<?php } else { ?>
+    <div class="text-center">
+        <h4>Вы не авторизованы чтобы смотреть и редактировать данные</h4>
+    </div>
+<?php } ?>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?php $title ?></title>
+</head>
+<body>
+<?php if(!isset($_SESSION['user'])) { ?>
+<!-- errors and result add -->
+<?php if (!empty($_POST)) {
+    if (!empty($errors)){
+        foreach ($errors as $error) {
+            ?>
+            <div class="text-center">
+                <h4><?php echo $error ?></h4>
+            </div>
+        <?php }
+    } if(isset($result)){ ?>
+        <div class="text-center">
+            <h4><?php echo $result ?></h4>
+        </div>
+    <?php } } else { ?>
+    <div class="text-center">
+        <h4>Заполните все поля, все поля обязательны для заполнения!</h4>
+    </div>
+<?php } ?>
+
+ <!-- form for register -->
+<form method="POST" class="form-horizontal" action="/register">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Почта:</label>
+        <div class="col-sm-5">
+            <input name="mail" type="email" class="form-control" placeholder="Email">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Имя:</label>
+        <div class="col-sm-5">
+            <input name="userName" type="text" class="form-control" placeholder="Имя">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Фамилия:</label>
+        <div class="col-sm-5">
+            <input name="userSurname" type="text" class="form-control" placeholder="Фамилия">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Логин:</label>
+        <div class="col-sm-5">
+            <input name="userLogin" type="text" class="form-control" placeholder="Логин">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Пароль</label>
+        <div class="col-sm-5">
+            <input name="userPassword1" type="password" class="form-control" placeholder="Пароль">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Повторите пароль</label>
+        <div class="col-sm-5">
+            <input name="userPassword2" type="password" class="form-control" placeholder="Повтор пароля">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success">Регистрация</button>
+        </div>
+    </div>
+</form>
+<?php } else { ?>
+    <div class="text-center">
+        <h4>Вы уже зарегистрировались и вошли на сайт со своей учетной записью! Вернитесь и работайте на главной</h4>
+    </div>
+<?php } ?>
+
+
+
+
+</body>
+</html>

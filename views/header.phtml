@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo $title ?></title>
+    <link rel="stylesheet" href="/views/style/bootstrap.min.css">
+    <link rel="stylesheet" href="/views/style/bootstrap.css">
+    <link rel="stylesheet" href="/views/style/bootstrap-theme.css">
+    <link rel="stylesheet" href="/views/style/bootstrap-theme.min.css">
+</head>
+<body>
+
+<!-- header -->
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Главная</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/about">О нас <span class="sr-only">(current)</span></a></li>
+                <li><a href="/contact">Контакты</a></li>
+                <?php if(isset($_SESSION['user'])) { ?>
+                    <li><a href="/post/add"><b>Добавить новость</b></a> </li>
+                <?php } ?>
+                <li><a href="/search"><b>Поиск по новостям</b></a> </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <?php if(!isset($_SESSION['user'])) { ?>
+                <li><a href="/login">Вход</a></li>
+                <li><a href="/register">Регистрация</a></li>
+                <?php } else { ?>
+                    <?php if($_SESSION['user']['isAdmin'] == 1){ ?>
+                        <li><a href="/admin">Панель администратора</a></li>
+                  <?php  } ?>
+                <li><a href="/profile">Профиль</a></li>
+                <li><a href="/logout">Выход</a></li>
+                <?php } ?>
+            </ul>
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+</body>
+</html>
