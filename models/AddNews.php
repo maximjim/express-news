@@ -48,9 +48,11 @@ class AddNews
         $time = date('Y-m-d H-i-s');
         $author = $_SESSION['user']['id'];
         $image = self::copyImage();
+        $content = str_replace("'", '"', $_POST['content']);
+        $name = str_replace("'", '"', $_POST['newsName']);
 
-        $data['name'] = $_POST['newsName'];
-        $data['content'] = $_POST['content'];
+        $data['name'] = $name;
+        $data['content'] = $content;
         $data['region'] = $_POST['region'];
         $data['author'] = $author;
         $data['image'] = $image;

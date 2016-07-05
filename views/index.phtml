@@ -40,7 +40,11 @@
                         <p><a href="/post/<?php echo $post['id'] ?>" class="btn btn-primary" role="button">Читать
                                 полностью</a>
                             <?php if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1){ ?>
-                        <p><a href="/admin/deletePost/post=<?php echo $post['id'] ?>" class="btn btn-primary" role="button">Удалить пост</a>
+                        <p><a href="/admin/deletePost/post=<?php echo $post['id'] ?>" class="btn btn-primary"
+                              role="button">Удалить пост</a>
+
+                        <p><a href="/admin/editPost/post=<?php echo $post['id'] ?>" class="btn btn-primary"
+                              role="button">Редактировать пост</a>
                             <?php } ?>
                     </div>
                 </div>
@@ -99,8 +103,12 @@
                 <div class="list-group">
                     <h2> Последние комментарии</h2>
                     <?php foreach ($lastComment as $item) { ?>
-                        <a href="/post/<?php echo $item['post']['id'] ?>"
-                           class="list-group-item"><?php echo $item['post']['name'] ?></a>
+                        <div class="list-group">
+                            <a href="/post/<?php echo $item['post']['id'] ?>"
+                               class="list-group-item"><?php echo $item['post']['name'] ?></a><br>
+                            <?php echo $item['content']?>
+                            <?php echo $item['time']?>
+                        </div>
                     <?php } ?>
                 </div>
             <?php } ?>

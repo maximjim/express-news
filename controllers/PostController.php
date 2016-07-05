@@ -57,8 +57,6 @@ class PostController
     {
         $post = show::getOnePost($id);
         $title = $post['name'];
-
-
         require_once(ROOT . '/views/header.phtml');
         require_once(ROOT . '/views/oneNews.phtml');
         require_once(ROOT . '/views/footer.phtml');

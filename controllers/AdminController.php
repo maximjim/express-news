@@ -187,5 +187,24 @@ class AdminController
         require_once(ROOT . '/views/footer.phtml');
     }
 
+    public function actionEditPost($id){
+        $title = "Панель админитстратора - редактирование новости";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            $post = Show::getOnePost($id);
+            $regions = Show::getRegions();
+
+            if (!empty($_POST)) {
+                $errors = addNews::checkedErrors();
+                if(empty($errors)){
+                    $result = AdminModel::editPost($id);
+                }
+            }
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/editPost.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
 
 }

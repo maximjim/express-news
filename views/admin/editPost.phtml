@@ -1,0 +1,66 @@
+<?php if (isset($accessDenied)){ ?>
+    <div class="text-center">
+        <h4><?php echo $accessDenied ?></h4>
+    </div>
+    <?php die(); }  ?>
+
+
+<!-- errors and result add -->
+<?php if (!empty($_POST)) {
+    if (!empty($errors)){
+        foreach ($errors as $error) {
+            ?>
+            <div class="text-center">
+                <h4><?php echo $error ?></h4>
+            </div>
+        <?php }
+    } if(isset($result)){ ?>
+        <div class="text-center">
+            <h4><?php echo $result ?></h4>
+        </div>
+    <?php } } else { ?>
+    <div class="text-center">
+        <h4>Заполните все поля, все поля обязательны для заполнения!</h4>
+    </div>
+<?php } ?>
+
+
+
+
+<!-- form for add messages -->
+<form method="post" class="form-horizontal" action="/admin/editPost/post=<?php echo $id ?>">
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Название:</label>
+        <div class="col-sm-5">
+            <input name="newsName" type="text" class="form-control" value="<?php echo $post['name'] ?>">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Текст статьи:</label>
+        <div class="col-sm-5">
+            <textarea name="content" class="form-control" rows="5"><?php echo $post['content'] ?></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Регион</label>
+        <div class="col-sm-5">
+            <select class="form-control" size="5" name="region">
+                <option disabled>Выберите регион:</option>
+                <?php foreach ($regions as $region) { ?>
+                    <option
+                        value="<?php echo $region['id'] ?>"  <?php if($post['region']['id'] == $region['id']){ ?> selected <?php } ?>>
+                        <?php echo $region['name'] ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Редактировать новость</button>
+        </div>
+    </div>
+</form>

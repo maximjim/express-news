@@ -11,6 +11,7 @@ return array(
     'admin/deleteUser/user=([0-9]+)' => 'admin/deleteUser/$1',
     'admin/usersList/page=([0-9]+)' => 'admin/usersList/$1',
     'admin/usersList' => 'admin/usersList',
+    'admin/editPost/post=([0-9]+)' => 'admin/editPost/$1',
     'admin/deletePost/post=([0-9]+)' => 'admin/deletePost/$1',
     'admin/isVisible/post=([0-9]+)' => 'admin/isVisiblePost/$1',
     'admin/postInvizList/page=([0-9]+)' => 'admin/postInvizList/$1',

@@ -211,5 +211,27 @@ class AdminModel
         return $countPage;
     }
 
+    public static function editPost($id){
+        $name = $_POST['newsName'];
+        $name = "'$name'";
+        $content = $_POST['content'];
+        $content = "'$content'";
+        $region = $_POST['region'];
+        $sql = "UPDATE
+                post
+                SET
+                name = $name,
+                content = $content,
+                region = $region
+                WHERE
+                id = $id";
+        $result = DataBase::queryDB(DataBase::connectToDB(), $sql);
+        if ($result == true) {
+            $result = "Новость успешно отредактирована!";
+        } else {
+            $result = "Редактирование не вышло, возникла ошибка!";
+        }
+        return $result;
+    }
 
 }
