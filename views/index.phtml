@@ -105,9 +105,11 @@
                     <?php foreach ($lastComment as $item) { ?>
                         <div class="list-group">
                             <a href="/post/<?php echo $item['post']['id'] ?>"
-                               class="list-group-item"><?php echo $item['post']['name'] ?></a><br>
-                            <?php echo $item['content']?>
-                            <?php echo $item['time']?>
+                               class="list-group-item"><?php echo $item['post']['name'] ?> <br><br>
+                             Комментарий:   <?php echo $item['content'] ?> <br>
+                              Дата добавления:  <?php echo $item['time'] ?>
+                            </a>
+
                         </div>
                     <?php } ?>
                 </div>
