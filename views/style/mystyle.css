@@ -6,3 +6,37 @@
     margin-left: 16%;
     width: 42%;
 }
+#resume {
+    width: 15%;
+    height: 15%;
+    float: right;
+    margin-right: 2%;
+}
+#table {
+    width: 83%;
+    max-width: 83%;
+    margin-bottom: 20px;
+}
+#btn{
+    font-size: 150%;
+}
+
+.myheader{
+    color: red;
+    font-size: 150%;
+    margin-left: 8%;
+    text-align: left;
+}
+.mylist{
+    margin-left: 10%;
+    text-align: left;
+    font-size: 120%;
+}
+.myparag{
+    margin-left: 8%;
+    text-align: left;
+    font-size: 140%;
+}
+.resume {
+    margin-bottom: 5%;
+}
