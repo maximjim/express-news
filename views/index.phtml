@@ -19,7 +19,14 @@
                     <div class="row table">
                         <div class="col-sm-6 col-md-6">
                             <a href="/region=<?php echo $post['region']['id'] ?>">
-                                <h3><?php echo $post['region']['name'] ?></h3></a>
+                                <h3>
+                                    <?php echo $post['region']['name'] ?>
+                                </h3></a>
+
+                            <a href="/category=<?php echo $post['category']['id'] ?>">
+                                <h3>
+                                    <?php echo $post['category']['name'] ?>
+                                </h3></a>
                             <h4>Автор: <a
                                     href="/post/user=<?php echo $post['author']['id'] ?>"><?php echo $post['author']['login'] ?> </a>
                             </h4>
@@ -33,12 +40,22 @@
                     </div>
 
 
-                    <img src="../images/<?php echo $post['image'] ?>" alt="131">
+                    <img src="/images/<?php echo $post['image'] ?>" alt="131">
                     <div class="caption">
 
                         <p> <?php echo substr($post['content'], 0, 325) . "..." ?></p>
+                        <?php if ($post['category']['name'] == "Аналитика" and !isset($_SESSION['user'])){ ?>
+                            <br>
+                            <h5>Вы не можете читать эту новость, так вы не зарегистрованный пользователь!</h5><br>
+                            <h5>Пожалуйста,
+                                <h3><a href="/register">Зарегиструйтесь</a></h3>
+                                или
+                                <h3><a href="/login">Авторизуйтесь</a></h3>
+                            </h5>
+                        <?php }else { ?>
                         <p><a href="/post/<?php echo $post['id'] ?>" class="btn btn-primary" role="button">Читать
                                 полностью</a>
+                            <?php } ?>
                             <?php if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1){ ?>
                         <p><a href="/admin/deletePost/post=<?php echo $post['id'] ?>" class="btn btn-primary"
                               role="button">Удалить пост</a>
@@ -89,32 +106,66 @@
     </div>
     <!-- left menu -->
     <?php if (isset($regions) or isset($lastComment)) { ?>
-        <div class="col-md-4">
-            <?php if (isset($regions)) { ?>
-                <div class="list-group">
-                    <h2> Список регионов</h2>
-                    <?php foreach ($regions as $region) { ?>
-                        <a href="/region=<?php echo $region['id'] ?>"
-                           class="list-group-item"><?php echo $region['name'] ?></a>
-                    <?php } ?>
-                </div>
-            <?php } ?>
-            <?php if (isset($lastComment)) { ?>
-                <div class="list-group">
-                    <h2> Последние комментарии</h2>
-                    <?php foreach ($lastComment as $item) { ?>
-                        <div class="list-group">
-                            <a href="/post/<?php echo $item['post']['id'] ?>"
-                               class="list-group-item"><?php echo $item['post']['name'] ?> <br><br>
-                             Комментарий:   <?php echo $item['content'] ?> <br>
-                              Дата добавления:  <?php echo $item['time'] ?>
-                            </a>
+            <div class="col-md-4">
+                <?php if (isset($regions)) { ?>
+                    <div class="list-group">
+                        <h2> Список регионов</h2>
+                        <?php foreach ($regions as $region) { ?>
+                            <a href="/region=<?php echo $region['id'] ?>"
+                               class="list-group-item btn-success"><?php echo $region['name'] ?></a>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
 
-                        </div>
-                    <?php } ?>
-                </div>
-            <?php } ?>
-        </div>
+
+                <?php if (isset($categories)) { ?>
+                    <div class="list-group">
+                        <h2> Список категорий</h2>
+                        <?php foreach ($categories as $category) { ?>
+                            <a href="/category=<?php echo $category['id'] ?>"
+                               class="list-group-item btn-success"><?php echo $category['name'] ?></a>
+                            <?php if(is_array($category['posts'])){ ?>
+                                <?php foreach ($category['posts'] as $post) { ?>
+                                    <a href="/post=<?php echo $post['id'] ?>"
+                                   class="list-group-item btn-info"><?php echo $post['name'] ?></a>
+                              <?php  } ?>
+
+                           <?php } ?>
+                        <?php } ?>
+                    </div>
+
+                <?php } ?>
+
+                <?php if (isset($ActivePosts)) { ?>
+                    <div class="list-group">
+                        <h2> Самые активные темы за сутки</h2>
+                        <?php foreach ($ActivePosts as $ActivePost) { ?>
+                            <a href="/post=<?php echo $ActivePost['id'] ?>"
+                               class="list-group-item btn-success"><?php echo $ActivePost['name'] ?></a>
+                            <?php } ?>
+                    </div>
+
+                <?php } ?>
+
+
+
+
+                <?php if (isset($lastComment)) { ?>
+                    <div class="list-group">
+                        <h2> Последние комментарии</h2>
+                        <?php foreach ($lastComment as $item) { ?>
+                            <div class="list-group">
+                                <a href="/post/<?php echo $item['post']['id'] ?>"
+                                   class="list-group-item"><?php echo $item['post']['name'] ?> <br><br>
+                                    Комментарий: <?php echo substr($item['content'], 0, 200) ?>... <br>
+                                    Дата добавления: <?php echo $item['time'] ?>
+                                </a>
+
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            </div>
     <?php } ?>
 
 

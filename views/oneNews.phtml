@@ -15,10 +15,24 @@
 <div class="center-block text-center">
     <div class="col-md-14">
 
+        <?php if (!isset($_SESSION['user']) and $post['category']['name'] == "Аналитика") { ?>
+            <h5>Вы не можете читать эту новость, так вы не зарегистрованный пользователь!</h5><br>
+            <h5>Пожалуйста,
+                <h3><a href="/register">Зарегиструйтесь</a></h3>
+                или
+                <h3><a href="/login">Авторизуйтесь</a></h3>
+            </h5>
+            <?php die();
+        } ?>
+
         <h3><?php echo $post['name'] ?></h3>
         <div class="row table">
             <div class="col-sm-6 col-md-6">
-                <a href="/region/<?php echo $post['region']['id'] ?>"><h3><?php echo $post['region']['name'] ?></h3></a>
+                <a href="/region=<?php echo $post['region']['id'] ?>"><h3><?php echo $post['region']['name'] ?></h3></a>
+                <a href="/category=<?php echo $post['category']['id'] ?>">
+                    <h3>
+                        <?php echo $post['category']['name'] ?>
+                    </h3></a>
                 <h4>Автор: <a
                         href="/user/<?php echo $post['author']['id'] ?>"><?php echo $post['author']['login'] ?> </a>
                 </h4>
@@ -26,6 +40,8 @@
             <div class="col-sm-6 col-md-6">
                 <br>
                 <h6> Дата добавления: <?php echo $post['created'] ?></h6>
+                <h6>Сейчас читают: <?php echo $readNow ?> пользователей</h6>
+                <h6>Всего людей прочли: <?php echo $post['reading'] ?></h6>
             </div>
         </div>
         <img src="../../images/<?php echo $post['image'] ?>">
@@ -48,19 +64,34 @@
 
 <div class="text-center">
 
-
     <?php if (is_array($post['comments'])) {
         foreach ($post['comments'] as $comment) { ?>
-        <div>
-            <h5>Автор: <?php echo $comment['author']['login'] ?></h5>
-            <div class="col-md-4">
-                <?php echo $comment['content'] ?>
+            <div class="comment">
+                <div class="name">
+                    <h5>Автор: <?php echo $comment['author']['login'] ?> </h5>
+                    <p><?php echo $comment['time'] ?></p>
+
+                        <a href="/like/comment=<?php echo $comment['id'] ?>">
+                            <button class="btn-success">Like(+<?php echo $comment['likes'] ?>)</button>
+                        </a>
+
+                            <button class="btn-<?php if (($comment['likes'] + $comment['disLikes']) > 0){
+                                echo "success";
+                            } else
+                           echo "danger" ?>">
+                                <?php echo ($comment['likes'] + $comment['disLikes']); ?></button>
+
+                        <a href="/dislike/comment=<?php echo $comment['id'] ?>">
+                            <button class="btn-danger">DisLike(<?php echo $comment['disLikes'] ?>)</button>
+                        </a>
+                </div>
+                <div class="comments">
+                    <p><?php echo $comment['content'] ?></p>
+                </div>
             </div>
-            <div class="right">
-                <?php echo $comment['time'] ?>
-            </div>
-        </div>
-    <?php } } ?>
+        <?php }
+    } ?>
+
 
     <form method="post" action="/post/addcomment/<?php echo $post['id'] ?>">
         <div class="form-group">

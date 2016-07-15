@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<?php if (isset($accessDenied)) { ?>
+<div class="text-center">
+    <h4><?php echo $accessDenied?></h4>
+</div>
+<?php die(); } ?>
+
+<div class="text-right ">
+    <h2> <a href="/admin/category/add" class="btn-success">Добавить категорию</a></h2>
+</div>
+
+<?php if (is_array($categories)) { ?>
+
+<table class="table table-striped">
+    <tr>
+        <th>id</th>
+        <th>Название категории</th>
+        <th>Удалить категорию</th>
+        <th>Редактировать категорию</th>
+    </tr>
+    <?php foreach ($categories as $category) { ?>
+    <tr>
+        <td><?php echo $category['id'] ?></td>
+        <td><?php echo $category['name'] ?></td>
+        <td><p><a href="/admin/deleteCategory/category=<?php echo $category['id'] ?>" class="btn btn-primary" role="button">Удалить</a></td>
+        <td><p><a href="/admin/editCategory/category=<?php echo $category['id'] ?>" class="btn btn-primary" role="button">Редактировать</a></td>
+    </tr>
+    <?php } ?>
+</table>
+
+<div class="text-center">
+    <nav>
+        <ul class="pagination">
+
+            <?php if ($pages['first'] != null) { ?>
+            <li><a href="/post/page=<?php echo $pages['first'] ?>">Первая</a></li>
+            <?php } ?>
+
+            <?php if ($pages['pre'] != null) { ?>
+            <li><a href="<?php echo $link . $pages['pre'] ?>"><?php echo $pages['pre'] ?></a></li>
+            <?php } ?>
+
+            <?php if ($pages['cur'] != null) { ?>
+            <li><a class="active btn-primary"
+                   href="<?php echo $link . $pages['cur'] ?>"><?php echo $pages['cur'] ?></a></li>
+            <?php } ?>
+
+            <?php if ($pages['next'] != null) { ?>
+            <li><a href="<?php echo $link . $pages['next'] ?>"><?php echo $pages['next'] ?></a></li>
+            <?php } ?>
+
+            <?php if ($pages['last'] != null) { ?>
+            <li><a href="<?php echo $link . $pages['last'] ?>">Последняя</a></li>
+            <?php } ?>
+        </ul>
+    </nav>
+</div>
+<?php } else { ?>
+<div class="text-center">
+    <h4>Регионов не найдено</h4>
+</div>
+<?php } ?>
+</body>
+</html>

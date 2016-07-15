@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<?php if (isset($accessDenied)) { ?>
+    <div class="text-center">
+        <h4><?php echo $accessDenied?></h4>
+    </div>
+    <?php die(); } ?>
+
+<div class="text-right ">
+    <h2> <a href="/admin/region/add" class="btn-success">Добавить регион</a></h2>
+</div>
+
+<?php if (is_array($comments)) { ?>
+
+    <table class="table table-striped">
+        <tr>
+            <th>id</th>
+            <th>Комментарий</th>
+            <th>Время</th>
+            <th>Автор</th>
+            <th>Удалить комментарий</th>
+        </tr>
+        <?php foreach ($comments as $comment) { ?>
+            <tr>
+                <td><?php echo $comment['id'] ?></td>
+                <td><?php echo $comment['content'] ?></td>
+                <td><?php echo $comment['time'] ?></td>
+                <td><p><a href="/admin/deleteComment/comment=<?php echo $comment['id'] ?>" class="btn btn-primary" role="button">Удалить</a></td>
+                <td><p><a href="/admin/showComment/comment=<?php echo $comment['id'] ?>" class="btn btn-primary" role="button">Добавить</a></td>
+            </tr>
+        <?php } ?>
+    </table>
+
+    <div class="text-center">
+        <nav>
+            <ul class="pagination">
+
+                <?php if ($pages['first'] != null) { ?>
+                    <li><a href="/post/page=<?php echo $pages['first'] ?>">Первая</a></li>
+                <?php } ?>
+
+                <?php if ($pages['pre'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['pre'] ?>"><?php echo $pages['pre'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['cur'] != null) { ?>
+                    <li><a class="active btn-primary"
+                           href="<?php echo $link . $pages['cur'] ?>"><?php echo $pages['cur'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['next'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['next'] ?>"><?php echo $pages['next'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['last'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['last'] ?>">Последняя</a></li>
+                <?php } ?>
+            </ul>
+        </nav>
+    </div>
+<?php } else { ?>
+    <div class="text-center">
+        <h4>Комментариев не сущетсвует, обновите страницу позже</h4>
+    </div>
+<?php } ?>
+
+</body>
+</html>

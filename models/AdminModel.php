@@ -9,6 +9,8 @@ class AdminModel
         $functions['/admin/postInvizList'] = "Проверить добавленные пользователями новости";
         $functions['/admin/usersList'] = "Управление пользователями";
         $functions['/admin/regionList'] = "Управление регионами";
+        $functions['/admin/categoryList'] = "Управление категориями";
+        $functions['/admin/commentList'] = "Управление комментариями в категории \"Политика\"";
 
         return $functions;
     }
@@ -134,6 +136,23 @@ class AdminModel
         return $regions;
     }
 
+    public static function getCommentList($page)
+    {
+        $countPostInPage = include(ROOT . '/config/showSettings.php');
+        $countPostInPage = $countPostInPage['CNT_REGION_IN_PAGE_ADMIN'];
+        $offset = $page * $countPostInPage - $countPostInPage;
+
+        $sql = "SELECT
+                *
+                FROM
+                comment
+                WHERE
+                isVisible = 0
+                LIMIT $offset, $countPostInPage";
+        $comments = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        return $comments;
+    }
+
     public static function deleteRegion($id)
     {
         $sql = "DELETE
@@ -211,6 +230,21 @@ class AdminModel
         return $countPage;
     }
 
+    public static function countPageComments()
+    {
+        $settings = include(ROOT . '/config/showSettings.php');
+        $sql = "SELECT
+                count(*) as cnt
+                from
+                comment
+                WHERE
+                isVisible = 0";
+        $countPage = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        $allPost = $countPage['0']['cnt'];
+        $countPage = ceil($allPost / $settings['CNT_REGION_IN_PAGE_ADMIN']);
+        return $countPage;
+    }
+
     public static function editPost($id){
         $name = $_POST['newsName'];
         $name = "'$name'";
@@ -233,5 +267,106 @@ class AdminModel
         }
         return $result;
     }
+
+    public static function deleteComment($id)
+    {
+        $sql = "DELETE
+                FROM
+                comment
+                WHERE
+                id = $id";
+        DataBase::queryDB(DataBase::connectToDB(), $sql);
+    }
+
+    public static function showComment($id)
+    {
+        $sql = "UPDATE
+                comment
+                SET
+                isVisible = 1
+                WHERE
+                id = $id";
+        DataBase::queryDB(DataBase::connectToDB(), $sql);
+    }
+
+    public static function getCategoryList($page)
+    {
+        $countPostInPage = include(ROOT . '/config/showSettings.php');
+        $countPostInPage = $countPostInPage['CNT_REGION_IN_PAGE_ADMIN'];
+        $offset = $page * $countPostInPage - $countPostInPage;
+
+        $sql = "SELECT
+                id, name
+                FROM
+                category
+                LIMIT $offset, $countPostInPage";
+        $categories = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        return $categories;
+    }
+
+    public static function countPageCategories()
+    {
+        $settings = include(ROOT . '/config/showSettings.php');
+        $sql = "SELECT
+                count(*) as cnt
+                from
+                category";
+        $countPage = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        $allPost = $countPage['0']['cnt'];
+        $countPage = ceil($allPost / $settings['CNT_REGION_IN_PAGE_ADMIN']);
+        return $countPage;
+    }
+
+    public static function insertCategory()
+    {
+        $data['name'] = $_POST['name'];
+        $result = DataBase::insertToDB($data, 'category');
+        if ($result == true) {
+            $result = "Категория успешно добавлена!";
+        } else {
+            $result = "Добавление не вышло, возникла ошибка!";
+        }
+        return $result;
+    }
+
+    public static function deleteCategory($id)
+    {
+        $sql = "DELETE
+                FROM
+                category
+                WHERE
+                id = $id";
+        DataBase::queryDB(DataBase::connectToDB(), $sql);
+    }
+
+    public static function getCategoryForEdit($id){
+        $sql = "SELECT
+                id, name
+                from
+                category
+                WHERE
+                id = $id";
+        $category = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        return $category[0];
+    }
+
+    public static function editCategory($id){
+        $name = $_POST['name'];
+        $name = "'$name'";
+        $sql = "UPDATE
+                category
+                SET
+                name = $name
+                WHERE
+                id = $id";
+        $result = DataBase::queryDB(DataBase::connectToDB(), $sql);
+        if ($result == true) {
+            $result = "Категория успешно отредактирована!";
+        } else {
+            $result = "Редактирование не вышло, возникла ошибка!";
+        }
+        return $result;
+    }
+
 
 }

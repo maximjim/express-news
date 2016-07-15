@@ -118,7 +118,7 @@ class AdminController
             $accessDenied = "Вы не имеете прав доступа к этому разделу!";
         }
         require_once(ROOT . '/views/header.phtml');
-        require_once(ROOT . '/views/admin/regions.phtml');
+        require_once(ROOT . '/views/admin/users.phtml');
         require_once(ROOT . '/views/footer.phtml');
     }
 
@@ -134,6 +134,69 @@ class AdminController
             $accessDenied = "Вы не имеете прав доступа к этому разделу!";
         }
 
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/regions.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+    public function actionCategoryList($page = 1)
+    {
+        $title = "Панель админитстратора - Управление регионами";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            $categories = AdminModel::getCategoryList($page);
+            $countPage = AdminModel::countPageCategories();
+            $link = "/admin/categoryList/page=";
+            $pages = Show::pagination($page, $countPage);
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/categories.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+
+    public function actionCommentList($page = 1)
+    {
+        $title = "Панель админитстратора - Управление комментариями";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            $comments = AdminModel::getCommentList($page);
+            $countPage = AdminModel::countPageComments();
+            $link = "/admin/commentList/page=";
+            $pages = Show::pagination($page, $countPage);
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/comments.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+    public function actionDeleteComment($id)
+    {   $title = "Панель админитстратора - Дать Администратора";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            AdminModel::deleteComment($id);
+            $location = $_SERVER['HTTP_REFERER'];
+            header("location: $location");
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/regions.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+    public function actionShowComment($id)
+    {   $title = "Панель админитстратора - Дать Администратора";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            AdminModel::showComment($id);
+            $location = $_SERVER['HTTP_REFERER'];
+            header("location: $location");
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
         require_once(ROOT . '/views/header.phtml');
         require_once(ROOT . '/views/admin/regions.phtml');
         require_once(ROOT . '/views/footer.phtml');
@@ -206,5 +269,55 @@ class AdminController
         require_once(ROOT . '/views/admin/editPost.phtml');
         require_once(ROOT . '/views/footer.phtml');
     }
+
+    public function actionAddCategory()
+    {
+        $title = "Панель администратора - Добавить категорию";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            if (isset($_POST['name'])) {
+                $result = AdminModel::insertCategory();
+            }
+
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/addCategory.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+    public function actionDeleteCategory($id)
+    {   $title = "Панель админитстратора - Удалить категорию";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            AdminModel::deleteCategory($id);
+            $location = $_SERVER['HTTP_REFERER'];
+            header("location: $location");
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/regions.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+
+    }
+
+    public function actionEditCategory($id)
+    {
+        $title = "Панель админитстратора - редактирование категории";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            $category = AdminModel::getCategoryForEdit($id);
+
+            if (isset($_POST['name'])) {
+                $result = AdminModel::editCategory($id);
+            }
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/editCategory.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+
 
 }

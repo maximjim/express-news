@@ -10,12 +10,16 @@ class Comment
         return $errors;
     }
 
-    public static function add(){
+    public static function add($post){
         $data = [];
+        if($post['category']['name'] == "Политика"){
+            $data['isVisible'] = 0;
+        }
         $time = date('Y-m-d H-i-s');
         $data['content'] = $_POST['comment'];
         $data['post'] = $_POST['idPost'];
         $data['time'] = $time;
+        $data['author'] = $_SESSION['user']['id'];
         $result = DataBase::insertToDB($data, 'comment');
          return $result;
     }
@@ -23,11 +27,12 @@ class Comment
     public static function getCommentsInPost($id){
 
         $sql = "SELECT
-                content, author, time
+                id, content, author, time, likes, disLikes
                 FROM
                 comment
                 WHERE
-                post = $id";
+                post = $id and isVisible = 1
+                ORDER BY likes DESC";
         $comments = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
         return $comments;
     }
@@ -41,5 +46,27 @@ class Comment
             $post['commentCnt'] = $count[0]['cnt'];
         }
         return $posts;
+    }
+
+    public static function likeComment($idComment){
+        $sql = "UPDATE
+                comment
+                SET
+                likes = likes + 1
+                WHERE
+                id = $idComment";
+
+        DataBase::queryDB(DataBase::connectToDB(), $sql);
+    }
+
+    public static function dislikeComment($idComment){
+        $sql = "UPDATE
+                comment
+                SET
+                dislikes = dislikes - 1
+                WHERE
+                id = $idComment";
+
+        DataBase::queryDB(DataBase::connectToDB(), $sql);
     }
 }

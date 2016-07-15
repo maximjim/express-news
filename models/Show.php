@@ -12,6 +12,27 @@ class Show
         return $regions;
     }
 
+    public static function getCategories()
+    {
+        $sql = "SELECT id, name FROM category";
+        $categories = dataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        return $categories;
+    }
+
+    public static function lastFivePostByCategory($categories)
+    {
+
+        foreach ($categories as $key => $category) {
+            $categ = $category['id'];
+            $sql = "SELECT id, name FROM post WHERE category = $categ and isVisible = 1 ORDER BY created DESC LIMIT 5 ";
+            $posts = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+            $categories[$key]['posts'] = $posts;
+        }
+
+        return $categories;
+
+    }
+
     public static function setAuthorInfo(array $posts)
     {
 
@@ -43,8 +64,21 @@ class Show
         foreach ($posts as &$post) {
             $idRegion = $post['region'];
             $sql = "SELECT id, name FROM region WHERE id = $idRegion";
-            $author = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
-            $post['region'] = $author[0];
+            $region = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+            $post['region'] = $region[0];
+        }
+
+        return $posts;
+    }
+
+    public static function setCategoryInfo(array $posts)
+    {
+
+        foreach ($posts as &$post) {
+            $idCategory = $post['category'];
+            $sql = "SELECT id, name FROM category WHERE id = $idCategory";
+            $category = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+            $post['category'] = $category[0];
         }
 
         return $posts;
@@ -58,7 +92,7 @@ class Show
         $offset = $page * $countPostInPage['CNT_POST_IN_PAGE'] - $countPostInPage['CNT_POST_IN_PAGE'];
 
         $sql = "SELECT
-                 id, name, content, author, image, region, created
+                 id, name, content, author, image, region, created, category
                  FROM
                  post
                  WHERE
@@ -70,6 +104,7 @@ class Show
         if (is_array($posts)) {
             $posts = Show::setAuthorInfo($posts);
             $posts = Show::setRegionInfo($posts);
+            $posts = Show::setCategoryInfo($posts);
             return $posts;
         }
     }
@@ -78,15 +113,16 @@ class Show
     public static function getOnePost($id)
     {
         $sql = "SELECT
-                 id, name, content, author, image, region, created
+                 id, name, content, author, image, region, created, reading, category
                  FROM
                  post
-                 WHERE id = $id";
+                 WHERE id = $id and isVisible = 1";
 
         $post = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
         if (is_array($post)) {
             $post = Show::setAuthorInfo($post);
             $post = Show::setRegionInfo($post);
+            $post = Show::setCategoryInfo($post);
             $post[0]['comments'] = Comment::getCommentsInPost($id);
             if (is_array($post[0]['comments'])) {
                 $post[0]['comments'] = Show::setAuthorInfo($post[0]['comments']);
@@ -103,7 +139,7 @@ class Show
         $offset = $page * $countPostInPage['CNT_POST_IN_PAGE'] - $countPostInPage['CNT_POST_IN_PAGE'];
 
         $sql = "SELECT
-                 id, name, content, author, image, region, created
+                 id, name, content, author, image, region, created, category
                  FROM
                  post
                  WHERE region = $idRegion and isVisible = 1
@@ -114,6 +150,30 @@ class Show
         if (is_array($posts)) {
             $posts = Show::setAuthorInfo($posts);
             $posts = Show::setRegionInfo($posts);
+            $posts = Show::setCategoryInfo($posts);
+            return $posts;
+        }
+    }
+
+    public static function getPostByCategory($idCategory, $page = 1)
+    {
+
+        $countPostInPage = include(ROOT . '/config/showSettings.php');
+        $offset = $page * $countPostInPage['CNT_POST_IN_PAGE'] - $countPostInPage['CNT_POST_IN_PAGE'];
+
+        $sql = "SELECT
+                 id, name, content, author, image, region, created, category
+                 FROM
+                 post
+                 WHERE category = $idCategory and isVisible = 1
+                 ORDER BY created DESC
+                 LIMIT $offset, 5";
+
+        $posts = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        if (is_array($posts)) {
+            $posts = Show::setAuthorInfo($posts);
+            $posts = Show::setRegionInfo($posts);
+            $posts = Show::setCategoryInfo($posts);
             return $posts;
         }
     }
@@ -125,7 +185,7 @@ class Show
         $offset = $page * $countPostInPage['CNT_POST_IN_PAGE'] - $countPostInPage['CNT_POST_IN_PAGE'];
 
         $sql = "SELECT
-                 id, name, content, author, image, region, created
+                 id, name, content, author, image, region, created, category
                  FROM
                  post
                  WHERE author = $idAuthor and isVisible = 1
@@ -136,6 +196,7 @@ class Show
         if (is_array($posts)) {
             $posts = self::setAuthorInfo($posts);
             $posts = self::setRegionInfo($posts);
+            $posts = Show::setCategoryInfo($posts);
             return $posts;
         }
     }
@@ -147,7 +208,7 @@ class Show
 
         $whereLine = self::formSearchData();
         $sql = "SELECT
-                 id, name, content, author, image, region, created
+                 id, name, content, author, image, region, created, category
                  FROM
                  post
                  WHERE
@@ -159,6 +220,7 @@ class Show
         if (is_array($posts)) {
             $posts = self::setAuthorInfo($posts);
             $posts = self::setRegionInfo($posts);
+            $posts = Show::setCategoryInfo($posts);
             return $posts;
         }
     }
@@ -174,7 +236,7 @@ class Show
                 ORDER BY time DESC
                 LIMIT 5";
         $lastComment = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
-        if(is_array($lastComment)) {
+        if (is_array($lastComment)) {
             $lastComment = self::setPostInfo($lastComment);
             return $lastComment;
         }
@@ -220,6 +282,21 @@ class Show
                 post
                 WHERE
                 region = $regionId and isVisible = 1";
+        $countPage = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        $allPost = $countPage['0']['cnt'];
+        $countPage = ceil($allPost / $settings['CNT_POST_IN_PAGE']);
+        return $countPage;
+    }
+
+    public static function countPageByCategory($idCategory)
+    {
+        $settings = include(ROOT . '/config/showSettings.php');
+        $sql = "SELECT
+                count(*) as cnt
+                from
+                post
+                WHERE
+                category = $idCategory and isVisible = 1";
         $countPage = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
         $allPost = $countPage['0']['cnt'];
         $countPage = ceil($allPost / $settings['CNT_POST_IN_PAGE']);
@@ -313,41 +390,72 @@ class Show
     public static function formSearchData()
     {
         $where = null;
-        if (!empty($_POST['author'])) {
-            $authorId = Show::getAuthorIdByName($_POST['author']);
+        if (!empty($_SESSION['search']['author'])) {
+            $authorId = Show::getAuthorIdByName($_SESSION['search']['author']);
             if (is_array($authorId)) {
                 $authorId = $authorId['id'];
-                $where['author'] = "and author = " . $authorId;
+                $where['author'] = " author = " . $authorId;
             }
         }
 
-        if (!empty($_POST['timeStart'])) {
-            $timeStart = $_POST['timeStart'] . ' 00:00:00';
+        if (!empty($_SESSION['search']['timeStart'])) {
+            $timeStart = $_SESSION['search']['timeStart'] . ' 00:00:00';
             $timeStart = "'$timeStart'";
             $timeStart = " created >= " . $timeStart;
             $where['timeStart'] = $timeStart;
         }
 
-        if (!empty($_POST['timeEnd'])) {
-            $timeEnd = $_POST['timeEnd'] . ' 00:00:00';
+        if (!empty($_SESSION['search']['timeEnd'])) {
+            $timeEnd = $_SESSION['search']['timeEnd'] . ' 00:00:00';
             $timeEnd = "'$timeEnd'";
             $timeEnd = " created <= " . $timeEnd;
             $where['timeEnd'] = $timeEnd;
         }
 
-        if (!empty($_POST['region'])) {
-            $timeEnd = $_POST['timeEnd'] . ' 00:00:00';
-            $where['region'] = "region = " . $_POST['region'];
+        if (!empty($_SESSION['search']['region'])) {
+            $where['region'] = " region = " . $_SESSION['search']['region'];
         }
 
+        $whereLine = "";
         if (is_array($where)) {
-            $whereLine = implode(' and ', $where);
-
-        } else {
-            $whereLine = "";
+            foreach ($where as $item) {
+                $whereLine .= " and " . $item;
+            }
         }
-
-
         return $whereLine;
+    }
+
+    public static function addReadNow($readNow, $idPost, $reading)
+    {
+        $allRead = $readNow + $reading;
+        $sql = "UPDATE post SET reading = $allRead WHERE id = $idPost";
+        DataBase::queryDB(DataBase::connectToDB(), $sql);
+    }
+
+    public static function ThreActivePost()
+    {
+        $day = date('Y-m-d ');
+        $hours = date('H-i-s');
+        $time1 = explode('-', $day);
+        $time1[2] = $time1[2] - 1;
+        $day = implode('-', $time1);
+        $date = $day . ' ' . $hours;
+
+        $sql = "SELECT count(*) AS cnt, post
+                FROM comment
+                WHERE isVisible = 1
+                AND time > '2016-07-14 05:00:16'
+                GROUP BY post
+                ORDER BY cnt DESC
+                LIMIT 3";
+
+        $activePostsID = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        //$activePosts = [];
+        if (is_array($activePostsID)) {
+            foreach ($activePostsID as $item) {
+                $activePosts[] = Show::getOnePost($item['post']);
+            }
+            return $activePosts;
+        }
     }
 }

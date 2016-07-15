@@ -40,3 +40,20 @@
 .resume {
     margin-bottom: 5%;
 }
+
+.comment {
+    border: solid 2px black;
+    width: 40%;
+    margin: 0 auto;
+    border-radius: 10px;
+    margin-bottom: 1%;
+}
+
+.name > p,
+.name > h5 {
+    display: inline-block
+}
+
+.name > p {
+    margin-right: 5%;
+}
