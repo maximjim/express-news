@@ -15,6 +15,9 @@ class AddNews
         if (!isset($_POST['region']) or empty($_POST['region'])){
             $errors[] = "Вы не выбрали регион, пожалуйста выберите регион";
         }
+        if (!isset($_POST['category']) or empty($_POST['category'])){
+            $errors[] = "Вы не выбрали регион, пожалуйста выберите регион";
+        }
         return $errors;
     }
 
@@ -54,6 +57,7 @@ class AddNews
         $data['name'] = $name;
         $data['content'] = $content;
         $data['region'] = $_POST['region'];
+        $data['category'] = $_POST['category'];
         $data['author'] = $author;
         $data['image'] = $image;
         $data['created'] = $time;

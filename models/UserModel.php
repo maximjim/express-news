@@ -49,7 +49,7 @@ class UserModel
         $data['surname'] = $_POST['userSurname'];
         $data['email'] = $_POST['mail'];
 
-        $result = DataBase::insertToDB(DataBase::connectToDB(), $data, 'user');
+        $result = DataBase::insertToDB($data, 'user');
 
         if($result == true){
             $result = "Вы успешно зарегистрировались";

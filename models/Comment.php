@@ -19,7 +19,11 @@ class Comment
         $data['content'] = $_POST['comment'];
         $data['post'] = $_POST['idPost'];
         $data['time'] = $time;
-        $data['author'] = $_SESSION['user']['id'];
+        if( isset($_SESSION['user'])){
+            $data['author'] = $_SESSION['user']['id'];
+        } else {
+            $data['author'] = 1;
+        }
         $result = DataBase::insertToDB($data, 'comment');
          return $result;
     }

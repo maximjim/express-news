@@ -1,0 +1,59 @@
+<?php if (is_array($comments)) {
+    foreach ($comments as $comment) { ?>
+        <div class="comment">
+            <div class="name">
+                <h5>Автор: <?php echo $comment['author']['login'] ?> </h5>
+                <p><?php echo $comment['time'] ?></p>
+
+                <a href="/like/comment=<?php echo $comment['id'] ?>">
+                    <button class="btn-success">Like(+<?php echo $comment['likes'] ?>)</button>
+                </a>
+
+                <button class="btn-<?php if (($comment['likes'] + $comment['disLikes']) > 0){
+                    echo "success";
+                } else
+                    echo "danger" ?>">
+                    <?php echo ($comment['likes'] + $comment['disLikes']); ?></button>
+
+                <a href="/dislike/comment=<?php echo $comment['id'] ?>">
+                    <button class="btn-danger">DisLike(<?php echo $comment['disLikes'] ?>)</button>
+                </a>
+            </div>
+            <div class="comments">
+                <p><?php echo $comment['content'] ?></p>
+            </div>
+
+            <a class="text-center" href="post/<?php echo $comment['post'] ?>"><h4>Посмотреть в записи</h4></a>
+        </div>
+    <?php }
+} ?>
+
+
+
+<nav class="text-center">
+    <ul class="pagination ">
+
+        <?php if ($pages['first'] != null) { ?>
+            <li><a href="<?php echo $link ?><?php echo $pages['first'] ?>">Первая</a></li>
+        <?php } ?>
+
+        <?php if ($pages['pre'] != null) { ?>
+            <li><a href="<?php echo $link . $pages['pre'] ?>"><?php echo $pages['pre'] ?></a></li>
+        <?php } ?>
+
+        <?php if ($pages['cur'] != null) { ?>
+            <li><a class="active btn-primary"
+                   href="<?php echo $link . $pages['cur'] ?>"><?php echo $pages['cur'] ?></a></li>
+        <?php } ?>
+
+        <?php if ($pages['next'] != null) { ?>
+            <li><a href="<?php echo $link . $pages['next'] ?>"><?php echo $pages['next'] ?></a></li>
+        <?php } ?>
+
+        <?php if ($pages['last'] != null) { ?>
+            <li><a href="<?php echo $link . $pages['last'] ?>">Последняя</a></li>
+        <?php } ?>
+
+
+    </ul>
+</nav>

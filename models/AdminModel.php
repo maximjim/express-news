@@ -10,9 +10,27 @@ class AdminModel
         $functions['/admin/usersList'] = "Управление пользователями";
         $functions['/admin/regionList'] = "Управление регионами";
         $functions['/admin/categoryList'] = "Управление категориями";
+        $functions['/admin/reklamList'] = "Управление рекламой";
         $functions['/admin/commentList'] = "Управление комментариями в категории \"Политика\"";
 
         return $functions;
+    }
+
+    public static function checkErrorsReklam(){
+        $errors = [];
+        if (!isset($_POST['name']) or empty($_POST['name']) or strlen($_POST['name'])< 4){
+            $errors[] = "Вы не заполнили поле имя новости или заголовок короче 3 символов, пожалуйста исправьте ошибки";
+        }
+        if (!isset($_POST['company']) or empty($_POST['company']) or strlen($_POST['company'])< 1){
+            $errors[] = "Вы не заполнили имя компании или имя короче 1 символа, пожалуйста исправьте ошибки";
+        }
+        if (!isset($_POST['price']) or empty($_POST['price'])){
+            $errors[] = "Вы не указали цену, пожалуйста укажите цену";
+        }
+        if (!isset($_POST['link']) or empty($_POST['link'])){
+            $errors[] = "Вы не указали ссыдку для перехода, пожалуйста укажите ссылку";
+        }
+        return $errors;
     }
 
     public static function getPostsInviz($page)
@@ -22,7 +40,7 @@ class AdminModel
         $offset = $page * $countPostInPage['CNT_POST_IN_PAGE_ADMIN'] - $countPostInPage['CNT_POST_IN_PAGE_ADMIN'];
 
         $sql = "SELECT
-                 id, name, content, author,  region, image, created
+                 id, name, content, author,  region, image, created, category
                  FROM
                  post
                  WHERE
@@ -34,6 +52,7 @@ class AdminModel
         if (is_array($posts)) {
             $posts = Show::setAuthorInfo($posts);
             $posts = Show::setRegionInfo($posts);
+            $posts = Show::setCategoryInfo($posts);
             return $posts;
         }
     }
@@ -77,7 +96,7 @@ class AdminModel
     public static function usersList($page)
     {
         $countPostInPage = include(ROOT . '/config/showSettings.php');
-        $countPostInPage = $countPostInPage['CNT_POST_IN_PAGE_ADMIN'];
+        $countPostInPage = $countPostInPage['CNT_USER_IN_PAGE_ADMIN'];
         $offset = $page * $countPostInPage - $countPostInPage;
 
         $sql = "SELECT
@@ -151,6 +170,21 @@ class AdminModel
                 LIMIT $offset, $countPostInPage";
         $comments = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
         return $comments;
+    }
+
+    public static function getReklamList($page)
+    {
+        $countPostInPage = include(ROOT . '/config/showSettings.php');
+        $countPostInPage = $countPostInPage['CNT_REKLAM_IN_PAGE_ADMIN'];
+        $offset = $page * $countPostInPage - $countPostInPage;
+
+        $sql = "SELECT
+                *
+                FROM
+                reklama
+                LIMIT $offset, $countPostInPage";
+        $reklams = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        return $reklams;
     }
 
     public static function deleteRegion($id)
@@ -239,6 +273,20 @@ class AdminModel
                 comment
                 WHERE
                 isVisible = 0";
+        $countPage = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        $allPost = $countPage['0']['cnt'];
+        $countPage = ceil($allPost / $settings['CNT_REGION_IN_PAGE_ADMIN']);
+        return $countPage;
+    }
+
+    public static function countPageReklams()
+    {
+        $settings = include(ROOT . '/config/showSettings.php');
+        $sql = "SELECT
+                count(*) as cnt
+                from
+                reklama
+                ";
         $countPage = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
         $allPost = $countPage['0']['cnt'];
         $countPage = ceil($allPost / $settings['CNT_REGION_IN_PAGE_ADMIN']);
@@ -366,6 +414,30 @@ class AdminModel
             $result = "Редактирование не вышло, возникла ошибка!";
         }
         return $result;
+    }
+
+    public static function insertReklam()
+    {   $data = [];
+        $data['name'] = $_POST['name'];
+        $data['company'] = $_POST['company'];
+        $data['price'] = $_POST['price'];
+        $data['link'] = $_POST['link'];
+        $result = DataBase::insertToDB($data, 'reklama');
+        if ($result == true) {
+            $result = "Реклама успешно добавлена!";
+        } else {
+            $result = "Добавление не вышло, возникла ошибка!";
+        }
+        return $result;
+    }
+
+    public static function deleteReklam($id){
+        $sql = "DELETE
+                FROM
+                reklama
+                WHERE
+                id = $id";
+        DataBase::queryDB(DataBase::connectToDB(), $sql);
     }
 
 

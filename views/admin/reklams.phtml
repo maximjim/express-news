@@ -1,0 +1,67 @@
+<?php if (isset($accessDenied)) { ?>
+    <div class="text-center">
+        <h4><?php echo $accessDenied?></h4>
+    </div>
+    <?php die(); } ?>
+
+<div class="text-right ">
+    <h2> <a href="/admin/reklam/add" class="btn-success">Добавить рекламу</a></h2>
+</div>
+
+<?php if (is_array($reklams)) { ?>
+
+    <table class="table table-striped">
+        <tr>
+            <th>id</th>
+            <th>Имя</th>
+            <th>Фирма</th>
+            <th>Цена</th>
+            <th>Ссылка</th>
+            <th>К-во переходов</th>
+            <th>Удалить рекламу</th>
+        </tr>
+        <?php foreach ($reklams as $reklam) { ?>
+            <tr>
+                <td><?php echo $reklam['id'] ?></td>
+                <td><?php echo $reklam['name'] ?></td>
+                <td><?php echo $reklam['company'] ?></td>
+                <td><?php echo $reklam['price'] ?></td>
+                <td><?php echo $reklam['link'] ?></td>
+                <td><?php echo $reklam['transfer'] ?></td>
+                <td><p><a href="/admin/deleteReklam/id=<?php echo $reklam['id'] ?>" class="btn btn-primary" role="button">Удалить</a></td>
+            </tr>
+        <?php } ?>
+    </table>
+
+    <div class="text-center">
+        <nav>
+            <ul class="pagination">
+
+                <?php if ($pages['first'] != null) { ?>
+                    <li><a href="/post/page=<?php echo $pages['first'] ?>">Первая</a></li>
+                <?php } ?>
+
+                <?php if ($pages['pre'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['pre'] ?>"><?php echo $pages['pre'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['cur'] != null) { ?>
+                    <li><a class="active btn-primary"
+                           href="<?php echo $link . $pages['cur'] ?>"><?php echo $pages['cur'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['next'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['next'] ?>"><?php echo $pages['next'] ?></a></li>
+                <?php } ?>
+
+                <?php if ($pages['last'] != null) { ?>
+                    <li><a href="<?php echo $link . $pages['last'] ?>">Последняя</a></li>
+                <?php } ?>
+            </ul>
+        </nav>
+    </div>
+<?php } else { ?>
+    <div class="text-center">
+        <h4>Комментариев не сущетсвует, обновите страницу позже</h4>
+    </div>
+<?php } ?>

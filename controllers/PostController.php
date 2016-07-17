@@ -7,16 +7,17 @@ class PostController
         $title = "Главная страница портала";
         $regions = Show::getRegions();
         $categories = Show::lastFivePostByCategory(Show::getCategories());
-
+        $topCommentators = Show::topFiveCommentators();
         $ActivePosts = Show::ThreActivePost();
+        $reklams = Show::getReklamPosts();
+
+
 
         $posts = Show::getPosts($page);
         if (is_array($posts)) {
             $posts = Comment::setCommentCountInPost($posts);
             $lastComment = Show::getLastComment();
         }
-
-
 
         $link = "/post/page=";
         $pages = Show::pagination($page, Show::countAllPage());
@@ -30,10 +31,11 @@ class PostController
     {
         if (isset($_SESSION['user'])) {
             $regions = Show::getRegions();
+            $categories = Show::getCategories();
             $title = "Добавить новость";
             if (!empty($_POST)) {
                 $errors = addNews::checkedErrors();
-               $isImage = AddNews::isImage();
+                $isImage = AddNews::isImage();
                 if ($isImage == false) {
                     $errors[] = "Вы выбрали не изображение! Вы можете добавлять только изображения!";
                     require_once(ROOT . '/views/header.phtml');
@@ -41,7 +43,7 @@ class PostController
                     require_once(ROOT . '/views/footer.phtml');
                     die();
                 }
-                if(empty($errors)) {
+                if (empty($errors)) {
                     $result = AddNews::insertNews();
                 }
             }
@@ -61,8 +63,8 @@ class PostController
 
     public function actionOnePost($id)
     {
-        $post = show::getOnePost($id);
-        $readNow = rand(0,5);
+        $post = Show::getOnePost($id);
+        $readNow = rand(0, 5);
         $title = $post['name'];
         Show::addReadNow($readNow, $id, $post['reading']);
         require_once(ROOT . '/views/header.phtml');
@@ -76,6 +78,8 @@ class PostController
         $regions = Show::getRegions();
         $categories = Show::lastFivePostByCategory(Show::getCategories());
         $ActivePosts = Show::ThreActivePost();
+        $topCommentators = Show::topFiveCommentators();
+        $reklams = Show::getReklamPosts();
         $posts = Show::getPostByRegion($idRegion, $page);
         if (is_array($posts)) {
             $posts = Comment::setCommentCountInPost($posts);
@@ -96,6 +100,8 @@ class PostController
         $regions = Show::getRegions();
         $categories = Show::lastFivePostByCategory(Show::getCategories());
         $ActivePosts = Show::ThreActivePost();
+        $topCommentators = Show::topFiveCommentators();
+        $reklams = Show::getReklamPosts();
         $posts = Show::getPostByCategory($idCategory, $page);
         if (is_array($posts)) {
             $posts = Comment::setCommentCountInPost($posts);
@@ -116,6 +122,8 @@ class PostController
         $regions = Show::getRegions();
         $categories = Show::lastFivePostByCategory(Show::getCategories());
         $ActivePosts = Show::ThreActivePost();
+        $topCommentators = Show::topFiveCommentators();
+        $reklams = Show::getReklamPosts();
         $posts = Show::getPostByUser($idAuthor, $page);
         if (is_array($posts)) {
             $posts = Comment::setCommentCountInPost($posts);
@@ -132,17 +140,18 @@ class PostController
     }
 
     public function actionAddComment($idPost)
-    {   $post = show::getOnePost($idPost);
+    {
+        $post = Show::getOnePost($idPost);
         if (isset($_POST['comment'])) {
             $errors = Comment::checkedErrors();
             if (empty($errors)) {
                 $result = Comment::add($post);
             }
         }
-        $post = show::getOnePost($idPost);
+        $post = Show::getOnePost($idPost);
 
         $title = $post['name'];
-        $readNow = rand(0,5);
+        $readNow = rand(0, 5);
         Show::addReadNow($readNow, $idPost, $post['reading']);
         require_once(ROOT . '/views/header.phtml');
         require_once(ROOT . '/views/oneNews.phtml');
@@ -152,7 +161,7 @@ class PostController
 
     public function actionSearch($page = 1)
     {
-        if(!empty($_POST)){
+        if (!empty($_POST)) {
             $_SESSION['search'] = $_POST;
         }
 
@@ -161,6 +170,8 @@ class PostController
         $regions = Show::getRegions();
         $categories = Show::lastFivePostByCategory(Show::getCategories());
         $ActivePosts = Show::ThreActivePost();
+        $topCommentators = Show::topFiveCommentators();
+        $reklams = Show::getReklamPosts();
         $posts = Show::getSearchPosts($page);
         if (is_array($posts)) {
             $posts = Comment::setCommentCountInPost($posts);
@@ -172,24 +183,48 @@ class PostController
         require_once(ROOT . '/views/footer.phtml');
     }
 
-    public function actionCloseSearch(){
-        unset($_SESSION['search']);
+    public function actionCloseSearch()
+    {
+        Show::closeSearch();
         $location = $_SERVER['HTTP_REFERER'];
         header("location: $location");
     }
 
-    public function actionLikeComment($id){
+    public function actionLikeComment($id)
+    {
         Comment::likeComment($id);
         $location = $_SERVER['HTTP_REFERER'];
         header("location: $location");
     }
 
-    public function actionDislikeComment($id){
+    public function actionDislikeComment($id)
+    {
         Comment::dislikeComment($id);
         $location = $_SERVER['HTTP_REFERER'];
         header("location: $location");
     }
 
+    public function actionCommentByUser($idUser, $page = 1){
+        $user1[] = ['author' => $idUser];
+        $user = Show::setAuthorInfo($user1);
+        $user = $user[0]['author']['login'];
+        $title = "Комментарии пользователя - $user";
+
+        $comments = Show::getCommentByAuthor($idUser, $page);
+        $countPage = Show::countPageCommentByUser($idUser);
+        $pages = Show::pagination($page, $countPage);
+        $link = "/comment/user=$idUser/page=";
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/commentUser.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+    public function actionGoReklam($id){
+        $reklamPost = Show::getReklamPostById($id);
+        $result = Show::addTransferToReklamPost($id);
+        $link = $reklamPost['link'];
+        header("Location: $link");
+    }
 
 
 }

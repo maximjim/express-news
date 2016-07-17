@@ -1,0 +1,64 @@
+
+
+
+<?php if (isset($accessDenied)) { ?>
+    <div class="text-center">
+        <h4><?php echo $accessDenied?></h4>
+    </div>
+    <?php die(); } ?>
+
+<!-- errors and result add -->
+<?php if (!empty($_POST)) {
+    if (!empty($errors)){
+        foreach ($errors as $error) {
+            ?>
+            <div class="text-center">
+                <h4><?php echo $error ?></h4>
+            </div>
+        <?php }
+    } if(isset($result)){ ?>
+        <div class="text-center">
+            <h4><?php echo $result ?></h4>
+        </div>
+    <?php } } else { ?>
+    <div class="text-center">
+        <h4>Заполните все поля, все поля обязательны для заполнения!</h4>
+    </div>
+<?php } ?>
+
+<form method="post" class="form-horizontal" action="/admin/reklam/add">
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Имя:</label>
+        <div class="col-sm-5">
+            <input name="name" type="text" class="form-control" placeholder="Имя">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Фирма:</label>
+        <div class="col-sm-5">
+            <input name="company" type="text" class="form-control" placeholder="Фирма">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Цена:</label>
+        <div class="col-sm-5">
+            <input name="price" type="text" class="form-control" placeholder="Цена">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Ссылка для перехода: пример http:\\www.example.com . Без http:// работать не будет!!!</label>
+        <div class="col-sm-5">
+            <input name="link" type="text" class="form-control" placeholder="Ссылка для перехода">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+    </div>
+</form>

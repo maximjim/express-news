@@ -57,8 +57,19 @@
 <div class="text-center">
     <div class=" center-block text-center">
         <div class="col-md-8">
-            <?php if (!empty($posts)) {
-                foreach ($posts as $post) { ?>
+            <?php if (!empty($posts)) { ?>
+                <!-- reklama -->
+            <?php if (!empty($reklams)) {
+                    $reklam = array_shift($reklams); ?>
+                    <div class="thumbnail" style="background-color: yellow">
+                        <h1 style="background-color: red">ТОП ОБЬЯВЛЕНИЕ</h1>
+                        <h3><b><?php echo $reklam['name'] ?></b> <?php echo $reklam['company'] ?></h3>
+                        <h4>Цена: <?php echo $reklam['price'] ?> грн.</h4>
+                        <a href="/reklam/<?php echo $reklam['id'] ?>">Перейти на сайт рекламодателя</a>
+                    </div>
+                <?php } ?>
+
+             <?php   foreach ($posts as $post) { ?>
                     <div class="thumbnail">
                         <h3> <?php echo $post['name'] ?></h3>
 
@@ -88,6 +99,19 @@
                                     полностью</a>
                         </div>
                     </div>
+
+                    <!-- reklama -->
+                    <?php if (!empty($reklams)) {
+                        $reklamID = array_rand($reklams);
+                        $reklam = $reklams[$reklamID];
+                        unset($reklams[$reklamID]);
+                        ?>
+                        <div class="thumbnail" style="background-color: yellow">
+                            <h3><b><?php echo $reklam['name'] ?></b> <?php echo $reklam['company'] ?></h3>
+                            <h4>Цена: <?php echo $reklam['price'] ?> грн.</h4>
+                            <a href="/reklam/<?php echo $reklam['id'] ?>">Перейти на сайт рекламодателя</a>
+                        </div>
+                    <?php } ?>
                 <?php } ?>
             <?php } else { ?>
 

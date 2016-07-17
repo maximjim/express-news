@@ -432,6 +432,11 @@ class Show
         DataBase::queryDB(DataBase::connectToDB(), $sql);
     }
 
+    public static function closeSearch()
+    {
+        unset($_SESSION['search']);
+    }
+
     public static function ThreActivePost()
     {
         $day = date('Y-m-d ');
@@ -458,4 +463,86 @@ class Show
             return $activePosts;
         }
     }
+
+    public static function topFiveCommentators()
+    {
+        $sql = "SELECT
+                count(*) as cnt, author
+                FROM comment
+                GROUP BY author
+                ORDER BY cnt DESC
+                LIMIT 5";
+        $topCommentators = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        $topCommentators = Show::setAuthorInfo($topCommentators);
+        return $topCommentators;
+    }
+
+    public static function getCommentByAuthor($id, $page)
+    {
+        $countPostInPage = include(ROOT . '/config/showSettings.php');
+        $countPostInPage = $countPostInPage['CNT_COMMENT_IN_PAGE_ADMIN'];
+        $offset = $page * $countPostInPage - $countPostInPage;
+
+        $sql = "SELECT
+                id, content, post, time, likes, disLikes, author
+                FROM
+                comment
+                WHERE author = $id and isVisible = 1
+                LIMIT $offset, $countPostInPage";
+        $comments = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        $comments = Show::setAuthorInfo($comments);
+        return $comments;
+
+    }
+
+    public static function countPageCommentByUser($id)
+    {
+        $settings = include(ROOT . '/config/showSettings.php');
+        $sql = "SELECT
+                count(*) as cnt
+                from
+                comment
+                WHERE isVisible = 1 and author = $id";
+
+        $countPage = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        $allPost = $countPage['0']['cnt'];
+        $countPage = ceil($allPost / $settings['CNT_COMMENT_IN_PAGE_ADMIN']);
+        return $countPage;
+    }
+
+    public static function getReklamPosts(){
+        $sql = "SELECT
+                *
+                FROM
+                reklama
+                ORDER BY
+                transfer
+                DESC";
+        $reklamPost = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        return $reklamPost;
+    }
+
+    public static function getReklamPostById($id){
+        $sql = "SELECT
+                *
+                FROM
+                reklama
+                WHERE
+                id = $id";
+        $reklamPost = DataBase::selectOfDB(DataBase::connectToDB(), $sql);
+        return $reklamPost[0];
+    }
+
+    public static function addTransferToReklamPost($id){
+        $sql = "UPDATE
+                REKLAMA
+                SET
+                transfer = transfer +1
+                WHERE
+                id = $id";
+        $result = DataBase::queryDB(DataBase::connectToDB(), $sql);
+        return $result;
+    }
+
+
 }

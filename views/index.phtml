@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title></title>
@@ -10,8 +10,20 @@
 <!-- post -->
 <div class=" center-block text-center">
     <div class="col-md-8">
-        <?php if (!empty($posts)) {
-            foreach ($posts as $post) { ?>
+        <?php if (!empty($posts)) { ?>
+            <!-- reklama -->
+            <?php if (!empty($reklams)) {
+                $reklam = array_shift($reklams); ?>
+                <div class="thumbnail" style="background-color: yellow">
+                    <h1 style="background-color: red">ТОП ОБЬЯВЛЕНИЕ</h1>
+                    <h3><b><?php echo $reklam['name'] ?></b> <?php echo $reklam['company'] ?></h3>
+                    <h4>Всего лишь <?php echo $reklam['price'] ?> грн.</h4>
+                    <a href="/reklam/<?php echo $reklam['id'] ?>">Перейти на сайт рекламодателя</a>
+                </div>
+            <?php } ?>
+
+
+            <?php foreach ($posts as $post) { ?>
                 <div class="thumbnail">
                     <h3> <?php echo $post['name'] ?></h3>
 
@@ -65,6 +77,21 @@
                             <?php } ?>
                     </div>
                 </div>
+
+                <!-- reklama -->
+                <?php if (!empty($reklams)) {
+                    $reklamID = array_rand($reklams);
+                    $reklam = $reklams[$reklamID];
+                    unset($reklams[$reklamID]);
+                    ?>
+                    <div class="thumbnail" style="background-color: yellow">
+                        <h3><b><?php echo $reklam['name'] ?></b> <?php echo $reklam['company'] ?></h3>
+                        <h4>Цена: <?php echo $reklam['price'] ?> грн.</h4>
+                        <a href="/reklam/<?php echo $reklam['id'] ?>">Перейти на сайт рекламодателя</a>
+                    </div>
+                <?php } ?>
+
+
             <?php } ?>
         <?php } else { ?>
 
@@ -106,66 +133,78 @@
     </div>
     <!-- left menu -->
     <?php if (isset($regions) or isset($lastComment)) { ?>
-            <div class="col-md-4">
-                <?php if (isset($regions)) { ?>
-                    <div class="list-group">
-                        <h2> Список регионов</h2>
-                        <?php foreach ($regions as $region) { ?>
-                            <a href="/region=<?php echo $region['id'] ?>"
-                               class="list-group-item btn-success"><?php echo $region['name'] ?></a>
-                        <?php } ?>
-                    </div>
-                <?php } ?>
+        <div class="col-md-4">
+            <?php if (isset($regions)) { ?>
+                <div class="list-group">
+                    <h2> Список регионов</h2>
+                    <?php foreach ($regions as $region) { ?>
+                        <a href="/region=<?php echo $region['id'] ?>"
+                           class="list-group-item btn-success"><?php echo $region['name'] ?></a>
+                    <?php } ?>
+                </div>
+            <?php } ?>
 
 
-                <?php if (isset($categories)) { ?>
-                    <div class="list-group">
-                        <h2> Список категорий</h2>
-                        <?php foreach ($categories as $category) { ?>
-                            <a href="/category=<?php echo $category['id'] ?>"
-                               class="list-group-item btn-success"><?php echo $category['name'] ?></a>
-                            <?php if(is_array($category['posts'])){ ?>
-                                <?php foreach ($category['posts'] as $post) { ?>
-                                    <a href="/post=<?php echo $post['id'] ?>"
+            <?php if (isset($categories)) { ?>
+                <div class="list-group">
+                    <h2> Список категорий</h2>
+                    <?php foreach ($categories as $category) { ?>
+                        <a href="/category=<?php echo $category['id'] ?>"
+                           class="list-group-item btn-success"><?php echo $category['name'] ?></a>
+                        <?php if (is_array($category['posts'])) { ?>
+                            <?php foreach ($category['posts'] as $post) { ?>
+                                <a href="/post/<?php echo $post['id'] ?>"
                                    class="list-group-item btn-info"><?php echo $post['name'] ?></a>
-                              <?php  } ?>
-
-                           <?php } ?>
-                        <?php } ?>
-                    </div>
-
-                <?php } ?>
-
-                <?php if (isset($ActivePosts)) { ?>
-                    <div class="list-group">
-                        <h2> Самые активные темы за сутки</h2>
-                        <?php foreach ($ActivePosts as $ActivePost) { ?>
-                            <a href="/post=<?php echo $ActivePost['id'] ?>"
-                               class="list-group-item btn-success"><?php echo $ActivePost['name'] ?></a>
                             <?php } ?>
-                    </div>
 
-                <?php } ?>
-
-
-
-
-                <?php if (isset($lastComment)) { ?>
-                    <div class="list-group">
-                        <h2> Последние комментарии</h2>
-                        <?php foreach ($lastComment as $item) { ?>
-                            <div class="list-group">
-                                <a href="/post/<?php echo $item['post']['id'] ?>"
-                                   class="list-group-item"><?php echo $item['post']['name'] ?> <br><br>
-                                    Комментарий: <?php echo substr($item['content'], 0, 200) ?>... <br>
-                                    Дата добавления: <?php echo $item['time'] ?>
-                                </a>
-
-                            </div>
                         <?php } ?>
-                    </div>
-                <?php } ?>
-            </div>
+                    <?php } ?>
+                </div>
+
+            <?php } ?>
+
+            <?php if (isset($ActivePosts)) { ?>
+                <div class="list-group">
+                    <h2> Самые активные темы за сутки</h2>
+                    <?php foreach ($ActivePosts as $ActivePost) { ?>
+                        <a href="/post/<?php echo $ActivePost['id'] ?>"
+                           class="list-group-item btn-success"><?php echo $ActivePost['name'] ?></a>
+                    <?php } ?>
+                </div>
+
+            <?php } ?>
+
+            <?php if (isset($topCommentators)) { ?>
+                <div class="list-group">
+                    <h2> Топ 5 комментаторов нашего портала</h2>
+                    <?php foreach ($topCommentators as $topCommentator) { ?>
+                        <a href="/comment/user=<?php echo $topCommentator['author']['id'] ?>"
+                           class="list-group-item btn-warning"><?php echo $topCommentator['author']['login'] ?>
+                            (Комментариев: <?php echo $topCommentator['cnt'] ?> )</a>
+                    <?php } ?>
+                </div>
+
+            <?php } ?>
+
+
+
+
+            <?php if (isset($lastComment)) { ?>
+                <div class="list-group">
+                    <h2> Последние комментарии</h2>
+                    <?php foreach ($lastComment as $item) { ?>
+                        <div class="list-group">
+                            <a href="/post/<?php echo $item['post']['id'] ?>"
+                               class="list-group-item"><?php echo $item['post']['name'] ?> <br><br>
+                                Комментарий: <?php echo substr($item['content'], 0, 200) ?>... <br>
+                                Дата добавления: <?php echo $item['time'] ?>
+                            </a>
+
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>
+        </div>
     <?php } ?>
 
 

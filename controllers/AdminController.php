@@ -37,7 +37,8 @@ class AdminController
     }
 
     public function actionIsVisiblePost($idPost)
-    { $title = "Панель админитстратора - Добавить пост для просмотра пользователями";
+    {
+        $title = "Панель админитстратора - Добавить пост для просмотра пользователями";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::isVisiblePost($idPost);
             header('location: /admin/postInvizList');
@@ -50,7 +51,8 @@ class AdminController
     }
 
     public function actionDeletePost($idPost)
-    {   $title = "Панель админитстратора - Удалить новость";
+    {
+        $title = "Панель админитстратора - Удалить новость";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::DeletePost($idPost);
             $location = $_SERVER['HTTP_REFERER'];
@@ -80,7 +82,8 @@ class AdminController
     }
 
     public function actionDeleteUser($id)
-    {   $title = "Панель админитстратора - Удалить пользователя";
+    {
+        $title = "Панель админитстратора - Удалить пользователя";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::deleteUser($id);
             $location = $_SERVER['HTTP_REFERER'];
@@ -95,7 +98,8 @@ class AdminController
     }
 
     public function actionGiveAdmin($id)
-    {   $title = "Панель админитстратора - Дать Администратора";
+    {
+        $title = "Панель админитстратора - Дать Администратора";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::giveAdmin($id);
             $location = $_SERVER['HTTP_REFERER'];
@@ -109,7 +113,8 @@ class AdminController
     }
 
     public function actionTakeAdmin($id)
-    {   $title = "Панель админитстратора - Забрать администратора";
+    {
+        $title = "Панель админитстратора - Забрать администратора";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::takeAdmin($id);
             $location = $_SERVER['HTTP_REFERER'];
@@ -174,8 +179,26 @@ class AdminController
         require_once(ROOT . '/views/footer.phtml');
     }
 
+    public function actionReklamList($page = 1)
+    {
+        $title = "Панель админитстратора - Управление рекламой";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            $reklams = AdminModel::getReklamList($page);
+            $countPage = AdminModel::countPageReklams();
+            $link = "/admin/reklamList/page=";
+            $pages = Show::pagination($page, $countPage);
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/reklams.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
     public function actionDeleteComment($id)
-    {   $title = "Панель админитстратора - Дать Администратора";
+    {
+        $title = "Панель админитстратора - Дать Администратора";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::deleteComment($id);
             $location = $_SERVER['HTTP_REFERER'];
@@ -189,9 +212,10 @@ class AdminController
     }
 
     public function actionShowComment($id)
-    {   $title = "Панель админитстратора - Дать Администратора";
+    {
+        $title = "Панель админитстратора - Дать Администратора";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
-            AdminModel::showComment($id);
+            AdminModel::ShowComment($id);
             $location = $_SERVER['HTTP_REFERER'];
             header("location: $location");
         } else {
@@ -203,7 +227,8 @@ class AdminController
     }
 
     public function actionDeleteRegion($id)
-    {   $title = "Панель админитстратора - Удалить регион";
+    {
+        $title = "Панель админитстратора - Удалить регион";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::deleteRegion($id);
             $location = $_SERVER['HTTP_REFERER'];
@@ -250,7 +275,8 @@ class AdminController
         require_once(ROOT . '/views/footer.phtml');
     }
 
-    public function actionEditPost($id){
+    public function actionEditPost($id)
+    {
         $title = "Панель админитстратора - редактирование новости";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             $post = Show::getOnePost($id);
@@ -258,7 +284,7 @@ class AdminController
 
             if (!empty($_POST)) {
                 $errors = addNews::checkedErrors();
-                if(empty($errors)){
+                if (empty($errors)) {
                     $result = AdminModel::editPost($id);
                 }
             }
@@ -287,7 +313,8 @@ class AdminController
     }
 
     public function actionDeleteCategory($id)
-    {   $title = "Панель админитстратора - Удалить категорию";
+    {
+        $title = "Панель админитстратора - Удалить категорию";
         if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
             AdminModel::deleteCategory($id);
             $location = $_SERVER['HTTP_REFERER'];
@@ -318,6 +345,39 @@ class AdminController
         require_once(ROOT . '/views/footer.phtml');
     }
 
+    public function actionAddReklam()
+    {
+        $title = "Панель администратора -  добавить рекламу";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            if (!empty($_POST)) {
+                $errors = AdminModel::checkErrorsReklam();
+
+                if (empty($errors)) {
+                    $result = AdminModel::insertReklam();
+                }
+            }
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/addReklam.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
+
+    public function actionDeleteReklam($id){
+        $title = "Панель админитстратора - Удалить рекламу";
+        if (isset($_SESSION['user']) and $_SESSION['user']['isAdmin'] == 1) {
+            AdminModel::deleteReklam($id);
+            $location = $_SERVER['HTTP_REFERER'];
+            header("location: $location");
+        } else {
+            $accessDenied = "Вы не имеете прав доступа к этому разделу!";
+        }
+        require_once(ROOT . '/views/header.phtml');
+        require_once(ROOT . '/views/admin/regions.phtml');
+        require_once(ROOT . '/views/footer.phtml');
+    }
 
 
 }

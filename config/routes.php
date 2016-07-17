@@ -1,10 +1,17 @@
 <?php
 return array(
+    // reklama
+    'reklam/([0-9]+)' => 'post/goReklam/$1',
     //comments
+    'comment/user=([0-9]+)/page=([0-9]+)' => 'post/commentByUser/$1/$2',
+    'comment/user=([0-9]+)' => 'post/commentByUser/$1',
     'dislike/comment=([0-9]+)' => 'post/dislikeComment/$1',
     'like/comment=([0-9]+)' => 'post/likeComment/$1',
     //admin controller
-    'autoadd' => 'add/add',
+    'admin/deleteReklam/id=([0-9]+)' => 'admin/deleteReklam/$1',
+    'admin/reklam/add' => 'admin/addReklam',
+    'admin/reklamList/page=([0-9]+)' => 'admin/reklamList/$1',
+    'admin/reklamList' => 'admin/reklamList',
 
     'admin/region/add' => 'admin/addRegion',
     'admin/editRegion/region=([0-9]+)' => 'admin/editRegion/$1',

@@ -53,6 +53,18 @@
     </div>
 
     <div class="form-group">
+        <label class="col-sm-2 control-label">Категория</label>
+        <div class="col-sm-5">
+            <select class="form-control" size="5" name="category">
+                <option disabled>Выберите категорию:</option>
+                <?php foreach ($categories as $category) { ?>
+                    <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                <?php } ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="col-sm-2 control-label">Регион</label>
         <div class="col-sm-5">
             <select class="form-control" size="5" name="region">

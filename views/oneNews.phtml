@@ -92,7 +92,7 @@
         <?php }
     } ?>
 
-
+    <?php if (isset($_SESSION['user'])){ ?>
     <form method="post" action="/post/addcomment/<?php echo $post['id'] ?>">
         <div class="form-group">
             <label class="col-sm-3 control-label">Комментарий: </label>
@@ -111,6 +111,13 @@
             </div>
         </div>
     </form>
+   <?php } else{ ?>
+        <div class="text-center">
+            <h4>Вы не можете оставлять комментарии, потому что вы незарегистрированный пользователь.
+                Пожалуйста зарегистрируйтесь или авторизуйтесь!</h4>
+        </div>
+  <?php  } ?>
+
 </div>
 
 </body>

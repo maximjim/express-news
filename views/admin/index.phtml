@@ -6,33 +6,40 @@
 </head>
 <body>
 <!-- access and function list -->
-    <?php if (isset($accessDenied)) { ?>
-        <div class="text-center">
-        <h4><?php echo $accessDenied?></h4>
-        </div>
-    <?php die();} ?>
+<?php if (isset($accessDenied)) { ?>
+    <div class="text-center">
+        <h4><?php echo $accessDenied ?></h4>
+    </div>
+    <?php die();
+} ?>
 
-    <?php if(isset($functions)){ ?>
-        <?php foreach ($functions as $key => $function) { ?>
-            <div class="text-left">
-                <h5><a href="<?php echo $key ?>"><?php echo $function ?></a></h5>
-            </div>
-      <?php  } ?>
-   <?php } ?>
+<?php if (isset($functions)) { ?>
+    <?php foreach ($functions as $key => $function) { ?>
+        <div class="text-left">
+            <h5><a href="<?php echo $key ?>"><?php echo $function ?></a></h5>
+        </div>
+    <?php } ?>
+<?php } ?>
 
 <div class=" center-block text-center">
     <div class="col-md-8">
-        <?php if (!empty($posts)){
+        <?php if (!empty($posts)) {
             foreach ($posts as $post) { ?>
                 <div class="thumbnail">
                     <h3> <?php echo $post['name'] ?></h3>
 
 
-
                     <div class="row table">
                         <div class="col-sm-6 col-md-6">
-                            <a href="/region=<?php echo $post['region']['id'] ?>"><h3><?php echo $post['region']['name'] ?></h3></a>
-                            <h4>Автор: <a href="/post/user=<?php echo $post['author']['id'] ?>"><?php echo $post['author']['login'] ?> </a></h4>
+                            <a href="/region=<?php echo $post['region']['id'] ?>">
+                                <h3><?php echo $post['region']['name'] ?></h3></a>
+                            <a href="/category=<?php echo $post['category']['id'] ?>">
+                                <h3>
+                                    <?php echo $post['category']['name'] ?>
+                                </h3></a>
+                            <h4>Автор: <a
+                                    href="/post/user=<?php echo $post['author']['id'] ?>"><?php echo $post['author']['login'] ?> </a>
+                            </h4>
                         </div>
                         <div class="col-sm-6 col-md-6">
                             <h6> Дата добавления: <?php echo $post['created'] ?></h6>
@@ -40,14 +47,16 @@
                     </div>
 
 
-
                     <img src="../../images/<?php echo $post['image'] ?>" alt="">
                     <div class="caption">
 
                         <p> <?php echo $post['content'] ?></p>
-                        <p><a href="/admin/isVisible/post=<?php echo $post['id'] ?>" class="btn btn-primary" role="button">Опубликовать</a>
-                        <p><a href="/admin/deletePost/post=<?php echo $post['id'] ?>" class="btn btn-primary" role="button">Удалить</a>
-                        <p><a href="/admin/editPost/post=<?php echo $post['id'] ?>" class="btn btn-primary" role="button">Редактировать</a>
+                        <p><a href="/admin/isVisible/post=<?php echo $post['id'] ?>" class="btn btn-primary"
+                              role="button">Опубликовать</a>
+                        <p><a href="/admin/deletePost/post=<?php echo $post['id'] ?>" class="btn btn-primary"
+                              role="button">Удалить</a>
+                        <p><a href="/admin/editPost/post=<?php echo $post['id'] ?>" class="btn btn-primary"
+                              role="button">Редактировать</a>
                     </div>
                 </div>
             <?php } ?>
@@ -55,33 +64,34 @@
 
 
         <!--  pagination -->
-        <?php if(isset($pages)){ ?>
-        <nav>
-            <ul class="pagination">
+        <?php if (isset($pages)) { ?>
+            <nav>
+                <ul class="pagination">
 
-                <?php if($pages['first'] != null){ ?>
-                    <li><a href="<?php echo $link . $pages['first'] ?>">Первая</a></li>
-                <?php } ?>
+                    <?php if ($pages['first'] != null) { ?>
+                        <li><a href="<?php echo $link . $pages['first'] ?>">Первая</a></li>
+                    <?php } ?>
 
-                <?php if($pages['pre'] != null){ ?>
-                    <li><a href="<?php echo $link . $pages['pre'] ?>"><?php echo $pages['pre'] ?></a></li>
-                <?php } ?>
+                    <?php if ($pages['pre'] != null) { ?>
+                        <li><a href="<?php echo $link . $pages['pre'] ?>"><?php echo $pages['pre'] ?></a></li>
+                    <?php } ?>
 
-                <?php if($pages['cur'] != null){ ?>
-                    <li><a class="active btn-primary" href="<?php echo $link . $pages['cur'] ?>"><?php echo $pages['cur'] ?></a></li>
-                <?php } ?>
+                    <?php if ($pages['cur'] != null) { ?>
+                        <li><a class="active btn-primary"
+                               href="<?php echo $link . $pages['cur'] ?>"><?php echo $pages['cur'] ?></a></li>
+                    <?php } ?>
 
-                <?php if($pages['next'] != null){ ?>
-                    <li><a href="<?php echo $link . $pages['next'] ?>"><?php echo $pages['next'] ?></a></li>
-                <?php } ?>
+                    <?php if ($pages['next'] != null) { ?>
+                        <li><a href="<?php echo $link . $pages['next'] ?>"><?php echo $pages['next'] ?></a></li>
+                    <?php } ?>
 
-                <?php if($pages['last'] != null){ ?>
-                    <li><a href="<?php echo $link . $pages['last'] ?>">Последняя</a></li>
-                <?php } ?>
+                    <?php if ($pages['last'] != null) { ?>
+                        <li><a href="<?php echo $link . $pages['last'] ?>">Последняя</a></li>
+                    <?php } ?>
 
 
-            </ul>
-        </nav>
+                </ul>
+            </nav>
         <?php } ?>
 </body>
 </html>
