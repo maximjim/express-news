@@ -1,0 +1,59 @@
+
+<?php if (!empty($_POST)) {
+    if (!empty($errors)){
+        foreach ($errors as $error) {
+            ?>
+            <div class="text-center">
+                <h4><?php echo $error ?></h4>
+            </div>
+        <?php }
+    } if(isset($result)){ ?>
+        <div class="text-center">
+            <h4><?php echo $result ?></h4>
+        </div>
+    <?php } } else { ?>
+    <div class="text-center">
+        <h4>Заполните все поля, все поля обязательны для заполнения!</h4>
+    </div>
+<?php } ?>
+
+    <!-- form for register -->
+    <form method="POST" class="form-horizontal" action="/email">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Почта:</label>
+            <div class="col-sm-5">
+                <input name="mail" type="email" class="form-control" placeholder="Email" value="<?php if(isset($_POST['mail'])){ echo $_POST['mail'];} ?>">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Имя:</label>
+            <div class="col-sm-5">
+                <input value="<?php if(isset($_POST['userName'])){ echo $_POST['userName'];} ?>" name="userName" type="text" class="form-control" placeholder="Имя">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Тема:</label>
+            <div class="col-sm-5">
+                <input value="<?php if(isset($_POST['subject'])){ echo $_POST['subject'];} ?>" name="subject" type="text" class="form-control" placeholder="Тема">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Сообщение:</label>
+            <div class="col-sm-5">
+                <textarea class="form-control" rows="4" name="messages"><?php if(isset($_POST['messages'])){ echo $_POST['messages'];} ?></textarea>
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success">Отправить</button>
+            </div>
+        </div>
+    </form>
+

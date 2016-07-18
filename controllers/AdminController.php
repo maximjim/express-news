@@ -283,7 +283,7 @@ class AdminController
             $regions = Show::getRegions();
 
             if (!empty($_POST)) {
-                $errors = addNews::checkedErrors();
+                $errors = AddNews::checkedErrors();
                 if (empty($errors)) {
                     $result = AdminModel::editPost($id);
                 }

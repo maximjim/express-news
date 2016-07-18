@@ -1,5 +1,6 @@
 <?php
 return array(
+    'email' => 'information/email',
     // reklama
     'reklam/([0-9]+)' => 'post/goReklam/$1',
     //comments

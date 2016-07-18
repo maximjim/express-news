@@ -6,7 +6,7 @@ class Show
 
     public static function getRegions()
     {
-        $link = dataBase::connectToDB();
+        $link = DataBase::connectToDB();
         $sql = "SELECT id, name FROM region";
         $regions = dataBase::selectOfDB($link, $sql);
         return $regions;
@@ -414,6 +414,9 @@ class Show
 
         if (!empty($_SESSION['search']['region'])) {
             $where['region'] = " region = " . $_SESSION['search']['region'];
+        }
+        if (!empty($_SESSION['search']['category'])) {
+            $where['category'] = " category = " . $_SESSION['search']['category'];
         }
 
         $whereLine = "";

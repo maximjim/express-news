@@ -118,7 +118,40 @@ class UserModel
         } else {
             return "При выполнении запроса возникла ошибка! нам очень жаль.";
         }
+    }
+
+    public static function checkedErrorsEmail(){
+        $errors = [];
+        if(!isset($_POST['mail']) or empty($_POST['mail']) or strlen($_POST['mail']) < 6){
+            $errors[] = "Вы указали некорректный email адресс. Пожалуйста исправьте это!";
+        }
+        if(!isset($_POST['userName']) or empty($_POST['userName']) or strlen($_POST['userName']) < 3){
+            $errors[] = "Вы не ввели имя пользователя, мы должны понимать как к вам обращаться!";
+        }
+        if(!isset($_POST['subject']) or empty($_POST['subject']) or strlen($_POST['subject']) < 3){
+            $errors[] = "Вы не ввели тему обращения!";
+        }
+        if(!isset($_POST['messages']) or empty($_POST['messages']) or strlen($_POST['messages']) < 20){
+            $errors[] = "Вы не ввели сообщение или ваше сообщение короче 20 символов. Исправьте пожалуйста!";
+        }
+        return $errors;
+
+    }
+
+    public static function sentEmail(){
+        $to      = 'maximjim94@gmail.com';
+        $subject = $_POST['subject'];
+        $message = "От: " . $_POST['mail'] . "\r\n" .
+            'Имя: ' . $_POST['userName'] . "\r\n" . $_POST['messages'];
 
 
+
+       $result = mail($to, $subject, $message);
+       if($result == true){
+           $result = "Сообщение успешно отправлено!";
+       } else{
+           $result = " Сообщение отправить не удалось!";
+       }
+        return $result;
     }
 }

@@ -3,9 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 </head>
 <body>
 
+<!-- javascript -->
+
+<script>
+    var a;
+    $(document).ready(function(){
+        $("#content1").mouseenter(function(){
+          a = $('#price').html();
+            $('#price').text(a - a*0.1);
+            $('#price').attr('color', 'red');
+            $('#price').attr('font-size', '44px');
+
+        });
+    });
+</script>
 
 <!-- post -->
 <div class=" center-block text-center">
@@ -14,12 +29,14 @@
             <!-- reklama -->
             <?php if (!empty($reklams)) {
                 $reklam = array_shift($reklams); ?>
-                <div class="thumbnail" style="background-color: yellow">
-                    <h1 style="background-color: red">ТОП ОБЬЯВЛЕНИЕ</h1>
-                    <h3><b><?php echo $reklam['name'] ?></b> <?php echo $reklam['company'] ?></h3>
-                    <h4>Всего лишь <?php echo $reklam['price'] ?> грн.</h4>
+
+                <div class="thumbnail" id="content1"  style="background-color: yellow">
+                    <h1 id="main1" style="background-color: red">ТОП ОБЬЯВЛЕНИЕ</h1>
+                        <h3><b><?php echo $reklam['name'] ?></b> <?php echo $reklam['company'] ?></h3>
+                        <h4>Всего лишь <b style="" id="price"><?php echo $reklam['price'] ?></b> грн.</h4>
                     <a href="/reklam/<?php echo $reklam['id'] ?>">Перейти на сайт рекламодателя</a>
                 </div>
+
             <?php } ?>
 
 
@@ -84,7 +101,7 @@
                     $reklam = $reklams[$reklamID];
                     unset($reklams[$reklamID]);
                     ?>
-                    <div class="thumbnail" style="background-color: yellow">
+                    <div id="content1" class="thumbnail" style="background-color: yellow">
                         <h3><b><?php echo $reklam['name'] ?></b> <?php echo $reklam['company'] ?></h3>
                         <h4>Цена: <?php echo $reklam['price'] ?> грн.</h4>
                         <a href="/reklam/<?php echo $reklam['id'] ?>">Перейти на сайт рекламодателя</a>
